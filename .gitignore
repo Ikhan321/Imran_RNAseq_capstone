@@ -1,0 +1,9 @@
+# Ignore raw data
+data/raw/
+
+# Ignore all Excel and CSV files
+*.xlsx
+*.csv
+
+# Ignore temporary files
+*.tmp
