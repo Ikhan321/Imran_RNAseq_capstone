@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_annotation
+    description: "Annotated gene metadata including KEGG, KOG, family, biotype."
+    columns:
+      - name: gene_id
+        tests:
+          - not_null
+          - unique
+      - name: gene_name
+      - name: gene_description
+      - name: family
+      - name: gene_biotype
+      - name: kegg_pathway_name
+      - name: kog_description
+
+  - name: stg_expression
+    description: "FPKM expression values for WT, pdr2, pdr3."
+    columns:
+      - name: gene_id
+        tests:
+          - not_null
+          - unique
+      - name: gene_name
+      - name: wt_fpkm
+      - name: pdr2_p_fpkm
+      - name: pdr3_p_fpkm
+
+
