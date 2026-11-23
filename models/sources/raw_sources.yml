@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: s_imrankhan
+    tables:
+      - name: annotation_raw
+      - name: expression_raw
+      - name: foldchange_raw
+      - name: l1l2_downregulated_raw
+      - name: l1l2_upregulated_raw
+      - name: pdr2_downregulated_raw
+      - name: pdr2_upregulated_raw
+      - name: wt_downregulated_raw
+      - name: wt_upregulated_raw
+      - name: annotation_core_raw

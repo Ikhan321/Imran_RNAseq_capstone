@@ -1,0 +1,40 @@
+{
+    "path_count": 137,
+    "parsed_path_count": 1,
+    "static_analysis_path_count": 1,
+    "static_analysis_parsed_path_count": 1,
+    "is_partial_parse_enabled": true,
+    "is_static_analysis_enabled": true,
+    "read_files_elapsed": 0.7972183999372646,
+    "load_macros_elapsed": 0.0005279999459162354,
+    "parse_project_elapsed": 0.12306799995712936,
+    "patch_sources_elapsed": 2.0900042727589607e-05,
+    "process_manifest_elapsed": 0.0002514999359846115,
+    "load_all_elapsed": 0.9614113999996334,
+    "projects": [
+        {
+            "project_name": "rna_seq_capstone",
+            "elapsed": 0.12298380001448095,
+            "parsers": [
+                {
+                    "parser": "model",
+                    "elapsed": 0.1229763999581337,
+                    "parsed_path_count": 1
+                }
+            ],
+            "parsed_path_count": 1
+        },
+        {
+            "project_name": "dbt_postgres",
+            "elapsed": 0,
+            "parsers": [],
+            "parsed_path_count": 0
+        },
+        {
+            "project_name": "dbt",
+            "elapsed": 0,
+            "parsers": [],
+            "parsed_path_count": 0
+        }
+    ]
+}

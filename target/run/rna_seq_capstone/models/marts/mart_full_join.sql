@@ -1,55 +1,113 @@
 
-  
+  create view "nf_da_onl_en_200726"."s_imrankhan"."mart_full_join__dbt_tmp"
+    
+    
+  as (
     
 
-  create  table "nf_da_onl_en_200726"."s_imrankhan"."mart_full_join__dbt_tmp"
-  
-  
-    as
-  
-  (
-    with ann as (
-    select DISTINCT * from "nf_da_onl_en_200726"."s_imrankhan"."stg_annotation"
+with annotation as (
+    select *
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_annotation"
 ),
-expr as (
-    select DISTINCT * from "nf_da_onl_en_200726"."s_imrankhan"."mart_expression_summary"
+
+expression as (
+    select *
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_expression"
 ),
-fc as (
-    select DISTINCT * from "nf_da_onl_en_200726"."s_imrankhan"."mart_foldchange_summary"
+
+foldchange as (
+    select *
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_foldchange"
 ),
-deg as (
-    select DISTINCT gene_id from "nf_da_onl_en_200726"."s_imrankhan"."mart_deg_union"
+
+l1l2_down as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_l1l2_downregulated"
+),
+
+l1l2_up as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_l1l2_upregulated"
+),
+
+pdr2_down as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_pdr2_downregulated"
+),
+
+pdr2_up as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_pdr2_upregulated"
+),
+
+wt_down as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_wt_downregulated"
+),
+
+wt_up as (
+    select gene_id
+    from "nf_da_onl_en_200726"."s_imrankhan"."stg_wt_upregulated"
 )
 
-select *
-from (
-    select
-        ann.gene_id,
-        ann.gene_name,
-        ann.gene_description,
+select
+    f.gene_id as gene_id,
 
-        expr.WT_P,
-        expr.WT_nP,
-        expr.PDR2_P,
-        expr.PDR2_nP,
-        expr.l1l2_P,
-        expr.l1l2_nP,
+    coalesce(a.gene_name, e.gene_name) as gene_name,
+    a.gene_description,
+    a.tf_family,
+    a.gene_biotype,
+    a.kegg_pathway_name,
+    a.kog_description,
+    a.range_value,
+    a.range_percent,
+    a.sum_value,
+    a.average_value,
+    a.express_value,
 
-        fc.fc_wt_nPvSP,
-        fc.padj_wt_nPvSP,
-        fc.fc_pdr2_nPvSP,
-        fc.padj_pdr2_nPvSP,
-        fc.fc_l1l2_nPvSP,
-        fc.padj_l1l2_nPvSP,
+    -- Expression can have multiple condition rows for each gene.
+    e.condition,
+    e.expression_value,
 
-        case when deg.gene_id is not null then 1 else 0 end as is_deg,
+    -- Processed fold-change results
+    f.fc_wt_nPvsP,
+    f.padj_wt_nPvsP,
+    f.fc_pdr2_nPvsP,
+    f.padj_pdr2_nPvsP,
+    f.fc_l1l2_nPvsP,
+    f.padj_l1l2_nPvsP,
 
-        row_number() over (partition by ann.gene_id order by ann.gene_id) as rn
-    from ann
-    left join expr using (gene_id)
-    left join fc using (gene_id)
-    left join deg using (gene_id)
-)
-where rn = 1
+    -- Existing flag fields
+    case when l1l2_down.gene_id is not null then true else false end
+        as l1l2_downregulated,
+    case when l1l2_up.gene_id is not null then true else false end
+        as l1l2_upregulated,
+
+    case when pdr2_down.gene_id is not null then true else false end
+        as pdr2_downregulated,
+    case when pdr2_up.gene_id is not null then true else false end
+        as pdr2_upregulated,
+
+    case when wt_down.gene_id is not null then true else false end
+        as wt_downregulated,
+    case when wt_up.gene_id is not null then true else false end
+        as wt_upregulated
+
+from foldchange f
+left join annotation a
+    on f.gene_id = a.gene_id
+left join expression e
+    on f.gene_id = e.gene_id
+left join l1l2_down
+    on f.gene_id = l1l2_down.gene_id
+left join l1l2_up
+    on f.gene_id = l1l2_up.gene_id
+left join pdr2_down
+    on f.gene_id = pdr2_down.gene_id
+left join pdr2_up
+    on f.gene_id = pdr2_up.gene_id
+left join wt_down
+    on f.gene_id = wt_down.gene_id
+left join wt_up
+    on f.gene_id = wt_up.gene_id
   );
-  

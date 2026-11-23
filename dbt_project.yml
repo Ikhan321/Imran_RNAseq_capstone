@@ -16,15 +16,4 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-models:
-  rna_seq_capstone:
-    staging:
-      +materialized: view
-    marts:
-      +materialized: table
 
-seeds:
-  rna_seq_capstone:
-    annotation_raw:
-      +column_types:
-        Gene_ID: string
